@@ -1,8 +1,8 @@
-from models import BaseModel
+from HBNB_2.hbnb.app.models import base_model
 from place import Place
 from user import User
 
-class Review(BaseModel):
+class Review(base_model):
     def __init__(self, text, rating, place, user):
         super().__init__()
         self.text = self.validate_text(text)
