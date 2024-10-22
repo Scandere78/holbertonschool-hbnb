@@ -1,4 +1,4 @@
-from HBNB_2.hbnb.app.models import base_model
+from models import base_model
 from place import Place
 from user import User
 
