@@ -33,7 +33,7 @@ class UserList(Resource):
     @api.response(200, 'OK')
     def get(self):
         """List of Users"""
-        list_of_users = facade.get_all_user()
+        list_of_users = facade.get_all_users()
         return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email} for user in list_of_users], 200
 
 @api.route('/<user_id>')
@@ -53,4 +53,22 @@ class UserResource(Resource):
     @api.response(400, 'User input data')
     def put(self, user_id):
         """Update User information"""
+        user_data = api.payload
         
+        """Verification User existe"""
+        user = facade.get_user(user_id)
+        if not user:
+            return {'error': 'User not found'}, 404
+        
+        """Valid Data user"""
+        if not user.data:
+            return {'error': 'Invalid input data'}, 400
+        
+        """MAJ update User"""
+        try:
+            updated_user = facade.update_user(user_id, user_data)
+        except ValueError as error:
+            return {'error': 'Invalid input data'}, 400
+        if not updated_user:
+            return{'error': 'User not found'}, 404
+        return {'id': user_id}, 200
