@@ -42,18 +42,23 @@ class ReviewList(Resource):
         # Placeholder for logic to return a list of all reviews
         list_of_reviews = facade.get_all_reviews()
         return [{'id': review.id, 'text': review.text, 'rating': review.rating} for review in list_of_reviews], 200
-
-@api.route('/<review_id>')
+    
+    @api.route('/<review_id>')
 class ReviewResource(Resource):
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        # Placeholder for the logic to retrieve a review by ID
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        return {'id': review_id, 'text': review.text, 'rating': review.rating, 'user_id': review.user_id, 'place_id': review.place_id}, 200
+        return {
+            'id': review_id,
+            'text': review.text,
+            'rating': review.rating,
+            'user_id': review.user_id,
+            'place_id': review.place_id
+        }, 200
 
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
