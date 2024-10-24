@@ -33,6 +33,10 @@ class HBnBFacade:
         if val:
             val.update(user_data)
         return val
+    
+    def delete_user(self, user_id):
+        # Placeholder for logic to delete a review
+        return self.user_repo.delete(user_id)
 
 
 #-------------------------------------------------------------------#
@@ -52,6 +56,10 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         return self.amenity_repo.update(amenity_id, amenity_data)
+   
+    def delete_amenity(self, amenity_id):
+        # Placeholder for logic to delete a review
+        return self.amenity_repo.delete(amenity_id)
     
 
 #-------------------------------------------------------------------#
@@ -70,11 +78,14 @@ class HBnBFacade:
 
     def update_places(self, places_id, places_data):
         Places.validate_request_data(places_data)
-        val = self.get_user(places_id)
+        val = self.get_places(places_id)
         if val:
             val.update(places_data)
         return val
-
+    
+    def delete_places(self, places_id):
+        # Placeholder for logic to delete a review
+        return self.places_repo.delete(places_id)
 
 #-------------------------------------------------------------------#
 #                           review                                  #
@@ -88,14 +99,14 @@ class HBnBFacade:
 
 
     def get_review(self, review_id):
-        return self.amenity_repo.get(review_id)
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        return self.amenity_repo.get_all()
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
         # Placeholder for logic to retrieve all reviews for a specific place
-        return self.amenity_repo.get(place_id)
+        return self.review_repo.get(place_id)
 
     def update_review(self, review_id, review_data):
         Review.validate_request_data(review_data)
@@ -106,5 +117,5 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         # Placeholder for logic to delete a review
-        return self.amenity_repo.delete(review_id)
+        return self.review_repo.delete(review_id)
 

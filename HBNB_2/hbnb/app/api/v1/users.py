@@ -72,3 +72,10 @@ class UserResource(Resource):
         if not updated_user:
             return{'error': 'User not found'}, 404
         return {'id': user_id}, 200
+    
+    @api.response(200, 'Review deleted successfully')
+    @api.response(404, 'Review not found')
+    def delete(self, user_id):
+        """Delete a review"""
+        # Placeholder for the logic to delete a review
+        pass

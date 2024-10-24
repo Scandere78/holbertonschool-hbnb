@@ -57,3 +57,10 @@ class AmenityResource(Resource):
         if check_amenity:
             return {'name':check_amenity.name}, 201
         return(404, 'Amenity not found')
+    
+    @api.response(200, 'Review deleted successfully')
+    @api.response(404, 'Review not found')
+    def delete(self, review_id):
+        """Delete a review"""
+        # Placeholder for the logic to delete a review
+        pass
