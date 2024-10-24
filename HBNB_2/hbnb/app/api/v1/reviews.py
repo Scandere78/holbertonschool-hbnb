@@ -21,11 +21,11 @@ class ReviewList(Resource):
     def post(self):
         review_data = api.payload
         new_reviews = facade.create_review(review_data)
-        existing_user = facade.get_user()
+        existing_user = facade.get_user(review_data['user_id'])
 
-        if existing_user.id == None:
+        if existing_user:
             return('ERROR'), 404
-        return {'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':new_reviews.user_id, 'place_id':new_reviews.place_id}
+        return {'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':new_reviews.id, 'place_id':new_reviews.place_id}
 
 
     @api.response(200, 'List of reviews retrieved successfully')
