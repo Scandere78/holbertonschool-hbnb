@@ -1,37 +1,22 @@
-from models import base_model
-from place import Place
-from user import User
+from app.models.base_model import BaseModel
+from app.models.user import User
+from app.models.place import Places
 
-class Review(base_model):
-    def __init__(self, text, rating, place, user):
+
+class Review(BaseModel):
+    def __init__(self, text, rating, place_id, user_id):
         super().__init__()
-        self.text = self.validate_text(text)
-        self.rating = self.validate_rating(rating)
-        self.place = self.validate_place(place)
-        self.user = self.validate_user(user)
-
-    def validate_text(self, text):
-        if not text or not isinstance(text, str):
-            raise ValueError("The review text is required and must be a valid string")
-        return text
-
-    def validate_rating(self, rating):
-        if not isinstance(rating, int) or not (1 <= rating <= 5):
-            raise ValueError("The rating must be a integer between 1 and 5.")
-        return rating
-
-    def validate_place(self, place):
-        if not isinstance(place, Place):
-            raise ValueError("the place must be a valid instance of Place.")
-        return place
-
-    def validate_user(self, user):
-        if not isinstance(user, User):
-            raise ValueError("The user must be a valid instance of User.")
-        return user
+        self.text = text
+        self.rating = rating
+        self.place_id = place_id
+        self.user_id = user_id
 
     
-    def update(self, data):
-        if 'rating' in data:
-            self.rating = self.validate_rating(data['rating'])
-        super().update(data)
+        if not text or not isinstance(text, str):
+            raise ValueError("The review text is required and must be a valid string")
+        if not isinstance(rating, int) or not (1 <= rating <= 5):
+            raise ValueError("The rating must be a integer between 1 and 5.")
+        if not isinstance(place_id, str):
+            raise ValueError("the place must be a valid instance of Place.")
+        if not isinstance(user_id, str):
+            raise ValueError("The user must be a valid instance of User.")
