@@ -98,8 +98,11 @@ class HBnBFacade:
         return self.amenity_repo.get(place_id)
 
     def update_review(self, review_id, review_data):
-        # Placeholder for logic to update a review
-        return self.amenity_repo.update(review_id, review_data)
+        Review.validate_request_data(review_data)
+        val = self.get_user(review_id)
+        if val:
+            val.update(review_id)
+        return val
 
     def delete_review(self, review_id):
         # Placeholder for logic to delete a review
