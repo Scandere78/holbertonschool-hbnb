@@ -17,29 +17,43 @@ class AmenityList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new amenity"""
+        amenity_data =  api.payload
         # Placeholder for the logic to register a new amenity
-        pass
-
+        existing_amenity = facade.get_all_amenities()
+        for i in existing_amenity:
+            if i.name == amenity_data['name']:
+                return {'error': f'{amenity_data["name"]} already registered'}, 400
+        new_amenity = facade.create_amenity(amenity_data)
+        return {'id':new_amenity.id, 'name':new_amenity.name}, 201
+    
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
-        """Retrieve a list of all amenities"""
-        # Placeholder for logic to return a list of all amenities
-        pass
+        _list = []
+        all_amenity = facade.get_all_amenities()
+        for i in all_amenity:
+            return_all = {'id':i.id, 'name':i.name}
+            _list.append(return_all)
+        return _list
+
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
-        """Get amenity details by ID"""
-        # Placeholder for the logic to retrieve an amenity by ID
-        pass
+        amenity = facade.get_amenity(amenity_id)
+        return {'name':amenity.name}
 
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
-        """Update an amenity's information"""
-        # Placeholder for the logic to update an amenity by ID
-        pass
+        amenity_data =  api.payload
+
+        facade.update_amenity(amenity_id, amenity_data)
+    
+        check_amenity = facade.get_amenity(amenity_id)
+        if check_amenity:
+            return {'name':check_amenity.name}, 201
+        return(404, 'Amenity not found')

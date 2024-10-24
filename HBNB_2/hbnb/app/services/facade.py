@@ -1,12 +1,16 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
+
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
-
+        self.amenity_repo = InMemoryRepository()
+#-------------------------------------------------------------------#
+#                           USER                                    #
+#-------------------------------------------------------------------#
     def create_user(self, user_data: dict) -> User:
-        user = User(**user_data)
+        user = User(**user_data,)
         self.user_repo.add(user)
         return user
 
@@ -26,25 +30,20 @@ class HBnBFacade:
             val.update(user_data)
         return val
 
-#-------------------------------------------------------------------
+#-------------------------------------------------------------------#
+#                           AMENITY                                 #
+#-------------------------------------------------------------------#
+
     def create_amenity(self, amenity_data):
-        # Placeholder for logic to create an amenity
-        amenity = Amenity(**amenity_data, id=str(uuid.uuid4()))
-        Amenity.validate_request_data(amenity_data)
-        self.amenity_repo.add(amenity)
-        return amenity
+        post_amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(post_amenity)
+        return post_amenity
 
-    def get_amenity(self, amenity_id):
-         # Placeholder for logic to retrieve an amenity by ID
+    def get_amenity(self, amenity_id:str) -> Amenity:
         return self.amenity_repo.get(amenity_id)
-
+        
     def get_all_amenities(self):
-        # Placeholder for logic to retrieve all amenities
-        return list(self.amenity_repo.get_all())
+        return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        Amenity.validate_request_data(amenity_data)
-        obj = self.get_amenity(amenity_id)
-        if obj:
-            obj.update(amenity_data)
-        return obj
+        return self.amenity_repo.update(amenity_id, amenity_data)
