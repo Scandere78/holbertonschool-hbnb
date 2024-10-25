@@ -75,6 +75,8 @@ class UserResource(Resource):
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, user_id):
-        """Delete a review"""
-        
-        pass
+        existing_user = facade.get_user(user_id)
+        if existing_user:
+            facade.delete_user(user_id)
+            return('User deleted successfully', 200)
+        return('User not found', 404)

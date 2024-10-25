@@ -78,3 +78,12 @@ class PlaceResource(Resource):
             return{'error': 'Place not found'}, 404
         return {'id': places_id}, 200
     
+    @api.response(200, 'Places deleted successfully')
+    @api.response(404, 'Places not found')
+    def delete(self, places_id):
+        """Delete a Places"""
+        existing_places = facade.get_places(places_id)
+        if existing_places:
+            facade.delete_places(places_id)
+            return('Places deleted successfully', 200)
+        return('Places not found', 404)
