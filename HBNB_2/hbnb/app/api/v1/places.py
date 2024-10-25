@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
 
-api = Namespace('places', description='Place operations')
+api = Namespace('place', description='Place operations')
 
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
@@ -35,55 +35,46 @@ class PlaceList(Resource):
     def post(self):
         """Register a new place"""
         # Placeholder for the logic to register a new place
-        places_data = api.payload
+        place_data = api.payload
 
         try:
-            new_places = facade.create_places(places_data)
+            new_place = facade.create_place(place_data)
         except ValueError as error:
             return {'error': "ERROR"}, 400
-        return {'title':new_places.title, 'description':new_places.description, 'price':new_places.price, 'longitude':new_places.longitude, 'owner_id': new_places.owner_id}, 201
+        return {'id':new_place.id, 'title':new_place.title, 'description':new_place.description, 'price':new_place.price, 'longitude':new_place.longitude, 'owner_id': new_place.owner_id}, 201
 
 
-    @api.response(200, 'List of places retrieved successfully')
+    @api.response(200, 'List of place retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
         # Placeholder for logic to return a list of all places
-        list_of_places = facade.get_all_places()
-        return [{'title':places.title, 'description':places.description, 'price':places.price, 'longitude':places.longitude, 'owner_id': places.owner_id} for places in list_of_places], 200
+        list_of_place = facade.get_all_place()
+        return [{'id':place.id, 'title':place.title, 'description':place.description, 'price':place.price, 'longitude':place.longitude, 'owner_id': place.owner_id} for place in list_of_place], 200
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
-    def get(self, places_id):
+    def get(self, place_id):
         """Get place details by ID"""
         # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
-        places = facade.get_places(places_id)
-        if not places:
+        place = facade.get_place(place_id)
+        if not place:
             return {'error': "ERROR"}, 400
-        return {'title':places.title, 'description':places.description, 'price':places.price, 'longitude':places.longitude, 'owner_id': places.owner_id}, 201
+        return {'id':place.id, 'title':place.title, 'description':place.description, 'price':place.price, 'longitude':place.longitude, 'owner_id': place.owner_id}, 201
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
-    def put(self, places_id, places_data):
+    def put(self, place_id):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
+        place_data = api.payload
         try:
-            updated_places = facade.update_places(places_id, places_data)
+            updated_place = facade.update_place(place_id, place_data)
         except ValueError as error:
             return {'error': 'Invalid input data'}, 400
-        if not updated_places:
+        if not updated_place:
             return{'error': 'Place not found'}, 404
-        return {'id': places_id}, 200
-    
-    @api.response(200, 'Places deleted successfully')
-    @api.response(404, 'Places not found')
-    def delete(self, places_id):
-        """Delete a Places"""
-        existing_places = facade.get_places(places_id)
-        if existing_places:
-            facade.delete_places(places_id)
-            return('Places deleted successfully', 200)
-        return('Places not found', 404)
+        return {'id': place_id}, 200

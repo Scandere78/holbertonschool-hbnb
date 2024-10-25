@@ -1,6 +1,6 @@
 from app.models.base_model import BaseModel
 
-class Places(BaseModel):
+class Place(BaseModel):
 
     """
     A class to represent a Place.
@@ -25,16 +25,15 @@ class Places(BaseModel):
         Timestamp when the place is last updated.
     """
 
-    def __init__(self, title:str, description:str, price:float, latitude:float, longitude:float, owner_id:str, place_id:str, id, created_at, updated_at):
+    def __init__(self, title:str, description:str, price:float, latitude:float, longitude:float, owner_id:str, id, created_at, updated_at, amenities):
         super().__init__(id, created_at, updated_at)
-        self.place_id = place_id
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
         self.owner_id = owner_id
-
+        self.amenities = amenities
 
         if not (1 <= len(title) <= 100):
             raise ValueError('Title length must be between 1 and 100 characters.')

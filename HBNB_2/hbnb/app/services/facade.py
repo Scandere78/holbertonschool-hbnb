@@ -4,14 +4,14 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.review import Review
-from app.models.place import Places
+from app.models.place import Place
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
-        self.places_repo =  InMemoryRepository()
+        self.place_repo =  InMemoryRepository()
 
 #-------------------------------------------------------------------#
 #                           USER                                    #
@@ -68,27 +68,26 @@ class HBnBFacade:
 #-------------------------------------------------------------------#
 #                           PLACES                                  #
 #-------------------------------------------------------------------#
-    def create_places(self, places_data):
-        post_places = Places(**places_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
-        self.places_repo.add(post_places)
-        return post_places
+    def create_place(self, place_data):
+        post_place = Place(**place_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
+        self.place_repo.add(post_place)
+        return post_place
 
-    def get_places(self, places_id:str) -> Places:
-        return self.places_repo.get(places_id)
+    def get_place(self, place_id:str) -> Place:
+        return self.place_repo.get(place_id)
         
-    def get_all_places(self):
-        return self.places_repo.get_all()
+    def get_all_place(self):
+        return self.place_repo.get_all()
 
-    def update_places(self, places_id, places_data):
-        Places.validate_request_data(places_data)
-        val = self.get_places(places_id)
+    def update_place(self, place_id, place_data):
+        val = self.get_place(place_id)
         if val:
-            val.update(places_data)
+            val.update(place_data)
         return val
     
-    def delete_places(self, places_id):
+    def delete_place(self, place_id):
         # Placeholder for logic to delete a review
-        return self.places_repo.delete(places_id)
+        return self.place_repo.delete(place_id)
 
 #-------------------------------------------------------------------#
 #                           review                                  #
