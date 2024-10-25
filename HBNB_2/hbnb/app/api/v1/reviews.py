@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade
+from app.services.facade import facade
 
 api = Namespace('reviews', description='Review operations')
 
@@ -11,8 +11,6 @@ review_model = api.model('Review', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
-facade = HBnBFacade()
-
 @api.route('/')
 class ReviewList(Resource):
     @api.expect(review_model)
@@ -20,12 +18,12 @@ class ReviewList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         review_data = api.payload
-
-        try:
-            new_reviews = facade.create_review(review_data)
-        except ValueError as error:
-            return {'error': "ERROR"}, 400
-        return {'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':new_reviews.id, 'place_id':new_reviews.place_id}, 201
+        new_reviews = facade.create_review(review_data)
+        existing_user = facade.get_user(review_data['user_id'])
+        print('--->', existing_user)
+        if not existing_user:
+            return('ERROR'), 404
+        return {'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':existing_user.id, 'place_id':new_reviews.place_id}
 
 
     @api.response(200, 'List of reviews retrieved successfully')

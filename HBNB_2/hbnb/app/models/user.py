@@ -2,12 +2,13 @@ from app.models.base_model import BaseModel
 import re
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, is_admin=False):
-        super().__init__()
+    def __init__(self, first_name, last_name, email, id, created_at, updated_at, is_admin=False):
+        super().__init__(id, created_at, updated_at)
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
+    
 
         if not (1 <= len(first_name) <= 50):
             raise ValueError("first_name must be between 1 and 50 characters")

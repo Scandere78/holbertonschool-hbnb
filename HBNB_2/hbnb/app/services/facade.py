@@ -1,3 +1,5 @@
+from datetime import datetime
+import uuid
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
@@ -10,11 +12,12 @@ class HBnBFacade:
         self.amenity_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.places_repo =  InMemoryRepository()
+
 #-------------------------------------------------------------------#
 #                           USER                                    #
 #-------------------------------------------------------------------#
     def create_user(self, user_data: dict) -> User:
-        user = User(**user_data,)
+        user = User(**user_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
         self.user_repo.add(user)
         return user
 
@@ -44,7 +47,7 @@ class HBnBFacade:
 #-------------------------------------------------------------------#
 
     def create_amenity(self, amenity_data):
-        post_amenity = Amenity(**amenity_data)
+        post_amenity = Amenity(**amenity_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
         self.amenity_repo.add(post_amenity)
         return post_amenity
 
@@ -66,7 +69,7 @@ class HBnBFacade:
 #                           PLACES                                  #
 #-------------------------------------------------------------------#
     def create_places(self, places_data):
-        post_places = Places(**places_data)
+        post_places = Places(**places_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
         self.places_repo.add(post_places)
         return post_places
 
@@ -92,11 +95,10 @@ class HBnBFacade:
 #-------------------------------------------------------------------#
 
     def create_review(self, review_data):
-        post_review = Review(**review_data)
+        post_review = Review(**review_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
         self.review_repo.add(post_review)
         return post_review
         # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
-
 
     def get_review(self, review_id):
         return self.review_repo.get(review_id)
