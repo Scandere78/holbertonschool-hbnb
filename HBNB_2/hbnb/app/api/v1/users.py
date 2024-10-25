@@ -76,5 +76,5 @@ class UserResource(Resource):
     @api.response(404, 'Review not found')
     def delete(self, user_id):
         """Delete a review"""
-        # Placeholder for the logic to delete a review
+        
         pass

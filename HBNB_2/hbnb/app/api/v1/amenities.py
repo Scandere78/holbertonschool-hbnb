@@ -57,9 +57,12 @@ class AmenityResource(Resource):
             return {'name':check_amenity.name}, 201
         return(404, 'Amenity not found')
     
-    @api.response(200, 'Review deleted successfully')
-    @api.response(404, 'Review not found')
-    def delete(self, review_id):
+    @api.response(200, 'Amenity deleted successfully')
+    @api.response(404, 'Amenity not found')
+    def delete(self, amenity_id):
         """Delete a review"""
-        # Placeholder for the logic to delete a review
-        pass
+        existing_amenity = facade.get_amenity(amenity_id)
+        if existing_amenity:
+            facade.delete_amenity(amenity_id)
+            return('Amenity deleted successfully', 200)
+        return('Amenity not found', 404)

@@ -95,7 +95,11 @@ class HBnBFacade:
 #-------------------------------------------------------------------#
 
     def create_review(self, review_data):
-        post_review = Review(**review_data, id=str(uuid.uuid4()), created_at=datetime.now(), updated_at=datetime.now())
+        post_review = Review(**review_data, 
+                             id=str(uuid.uuid4()), 
+                             created_at=datetime.now(), 
+                             updated_at=datetime.now())
+        
         self.review_repo.add(post_review)
         return post_review
         # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
@@ -107,7 +111,7 @@ class HBnBFacade:
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        # Placeholder for logic to retrieve all reviews for a specific place
+        # NOT WORK soPlaceholder for logic to retrieve all reviews for a specific place
         return self.review_repo.get(place_id)
 
     def update_review(self, review_id, review_data):

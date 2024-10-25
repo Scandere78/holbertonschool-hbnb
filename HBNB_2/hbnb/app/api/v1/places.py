@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services.facade import facade
 
 api = Namespace('places', description='Place operations')
 
@@ -38,7 +38,7 @@ class PlaceList(Resource):
         places_data = api.payload
 
         try:
-            new_places = facade.create_review(places_data)
+            new_places = facade.create_places(places_data)
         except ValueError as error:
             return {'error': "ERROR"}, 400
         return {'title':new_places.title, 'description':new_places.description, 'price':new_places.price, 'longitude':new_places.longitude, 'owner_id': new_places.owner_id}, 201
@@ -71,10 +71,10 @@ class PlaceResource(Resource):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
         try:
-            updated_places = facade.update_user(places_id, places_data)
+            updated_places = facade.update_places(places_id, places_data)
         except ValueError as error:
             return {'error': 'Invalid input data'}, 400
         if not updated_places:
-            return{'error': 'User not found'}, 404
+            return{'error': 'Place not found'}, 404
         return {'id': places_id}, 200
     

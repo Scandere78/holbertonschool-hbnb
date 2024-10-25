@@ -19,23 +19,26 @@ class ReviewList(Resource):
     def post(self):
         review_data = api.payload
         new_reviews = facade.create_review(review_data)
+        print(facade.review_repo._storage)
         existing_user = facade.get_user(review_data['user_id'])
         if not existing_user:
             return (400, 'Invalid input data')
-        return {'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':existing_user.id, 'place_id':new_reviews.place_id}
+        return {'id': new_reviews.id, 'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':existing_user.id, 'place_id':new_reviews.place_id}
 
 
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
         _list = []
         list_all_reviews = facade.get_all_reviews()
+        print(facade.review_repo._storage, '\n', list_all_reviews)
         for i in list_all_reviews:
-            return_all_reviews = {'text':i.text, 
+            return_all_reviews = {'id': i.id,
+                                  'text':i.text, 
                                   'rating':i.rating, 
                                   'user_id':i.id, 
                                   'place_id':i.place_id}
             _list.append(return_all_reviews)
-
+        print(list_all_reviews)
         return _list, 200
 
 @api.route('/<review_id>')
@@ -44,7 +47,7 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        
+        # Placeholder for the logic to retrieve a review by ID
         reviews = facade.get_review(review_id)
         if not reviews:
             return {'error': "ERROR"}, 400
@@ -55,7 +58,8 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
-
+        """Update a review's information"""
+        # Placeholder for the logic to update a review by ID
         review_data = api.payload
 
         try:
