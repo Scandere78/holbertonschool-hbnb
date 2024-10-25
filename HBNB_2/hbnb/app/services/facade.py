@@ -119,3 +119,4 @@ class HBnBFacade:
         # Placeholder for logic to delete a review
         return self.review_repo.delete(review_id)
 
+facade = HBnBFacade()
