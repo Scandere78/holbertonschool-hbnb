@@ -25,8 +25,9 @@ class Places(BaseModel):
         Timestamp when the place is last updated.
     """
     
-    def __init__(self, title:str, description:str, price:float, latitude:float, longitude:float, owner_id:str):
-        super().__init__()
+    def __init__(self, title:str, description:str, price:float, latitude:float, longitude:float, owner_id:str, place_id):
+        super().__init__(id)
+        self.place_id = place_id
         self.title = title
         self.description = description
         self.price = price
