@@ -74,15 +74,31 @@ class ReviewResource(Resource):
         # Placeholder for the logic to update a review by ID
         review_data = api.payload
 
+        if not review_data or 'user_id' not in review_data:
+            return {"error": "user_id is required"}, 400
+
+        user_id = review_data['user_id']
+
+        existing_user = facade.get_user(user_id)
+        if not existing_user:
+            return {"error": "User not found"}, 404
+        
+        existing_review = facade.get_review_by_id(review_id)
+        if not existing_review:
+            return {"error": "Review not found"}, 404
+
+        if existing_review.user_id != user_id:
+            return {"error": "You can only modify your own reviews"}, 403
+
         try:
             updated_reviews = facade.update_review(review_data)
         except ValueError as error:
             return {'Invalid input data'}, 400
         
         if not updated_reviews:
-            return {'error': 'Review not found' }, 404
-        return {"message": 'Review updated successfully'}, 200
-
+            return {'error': 'Review could not be updated' }, 404
+        return {"message": "Review updated successfully", "review": updated_reviews}, 200
+    
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
