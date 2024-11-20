@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('reviews', description='Review operations')
 
@@ -16,15 +17,26 @@ class ReviewList(Resource):
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
-        review_data = api.payload
-        new_reviews = facade.create_review(review_data)
-        print(facade.review_repo._storage)
-        existing_user = facade.get_user(review_data['user_id'])
-        if not existing_user:
-            return (400, 'Invalid input data')
-        return {'id': new_reviews.id, 'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':existing_user.id, 'place_id':new_reviews.place_id}
 
+        current_user = get_jwt_identity()
+        user_verification = facade.get_user(current_user["id"]) 
+        if user_verification!=None and user_verification.is_admin:
+
+            review_data = api.payload
+            
+            
+            existing_user = facade.get_user(review_data['user_id'])
+            if not existing_user:
+                return {"error": "Invalid input data"}, 400
+            
+            existing_review = facade.get_user_review(review_data['user_id'], review_data['place_id'])
+            if existing_review:
+                return {"error": "review exists in the place"}, 400
+            new_reviews = facade.create_review(review_data)
+            return {'id': new_reviews.id, 'text':new_reviews.text, 'rating':new_reviews.rating, 'user_id':existing_user.id, 'place_id':new_reviews.place_id}
+        return({"error": "Unauthorized action"}), 403
 
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
@@ -35,7 +47,7 @@ class ReviewList(Resource):
             return_all_reviews = {'id': i.id,
                                   'text':i.text, 
                                   'rating':i.rating, 
-                                  'user_id':i.id, 
+                                  'user_id':i.user_id, 
                                   'place_id':i.place_id}
             _list.append(return_all_reviews)
         print(list_all_reviews)
